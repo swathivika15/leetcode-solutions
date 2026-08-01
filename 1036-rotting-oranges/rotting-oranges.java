@@ -1,33 +1,44 @@
+class Pair{
+    int i,j;
+    Pair(int i,int j){
+        this.i=i;
+        this.j=j;
+    }
+}
+
 class Solution {
     public int orangesRotting(int[][] grid) {
-        int n=grid.length,m=grid[0].length;
-        if(n==0 || m==0)
-            return -1;
+        int ans=0,n=grid.length,m=grid[0].length;
+        int[] dx={0,0,1,-1},dy={1,-1,0,0};
+        int[][] days=new int[n][m];
+        Queue<Pair> q=new LinkedList<>();
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
-                if(grid[i][j]==2)
-                    dfs(grid,n,m,i,j,2);
+                if(grid[i][j]==2){
+                    q.add(new Pair(i,j));
+                    days[i][j]=0;
+                }
             }
         }
-        int ans=2;
-        for(int[] r:grid){
-            for(int c:r){
-                if(c==1)
+        while(!q.isEmpty()){
+            Pair c=q.poll();
+            int x=c.i,y=c.j;
+            for(int i=0;i<4;i++){
+                int nx=x+dx[i],ny=y+dy[i];
+                if(nx>=0 && nx<n && ny>=0 && ny<m && grid[nx][ny]==1){
+                    q.add(new Pair(nx,ny));
+                    grid[nx][ny]=2;
+                    days[nx][ny]=days[x][y]+1;
+                    ans=Math.max(ans,days[nx][ny]);
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1)
                     return -1;
-                    ans=Math.max(ans,c);
             }
         }
-        return ans-2;
-    }
-    void dfs(int[][] grid,int n,int m,int i,int j,int a){
-        if(i<0 || i>=n || j<0 || j>=m || grid[i][j]==0 ||(1<grid[i][j] && grid[i][j]<a))
-            return;
-        else{
-            grid[i][j]=a;
-            dfs(grid,n,m,i-1,j,a+1);
-            dfs(grid,n,m,i+1,j,a+1);
-            dfs(grid,n,m,i,j-1,a+1);
-            dfs(grid,n,m,i,j+1,a+1);
-        }
+        return ans;
     }
 }
