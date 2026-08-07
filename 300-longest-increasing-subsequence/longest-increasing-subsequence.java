@@ -1,10 +1,6 @@
 class Solution {
     public int lengthOfLIS(int[] nums) {
         int n=nums.length;
-        /*int[] cl=new int[n];
-        for(int i=0;i<n;i++)
-            cl[i]=nums[i];
-        Arrays.sort(cl);*/
         Set<Integer> s=new TreeSet<>();
         for(int i=0;i<n;i++)
             s.add(nums[i]);
@@ -17,9 +13,10 @@ class Solution {
         return lcs(nums,nums2);
     }
     int lcs(int[] a,int[] b){
-        int[][] dp=new int[a.length+1][b.length+1];
-        for(int i=a.length-1;i>=0;i--){
-            for(int j=b.length-1;j>=0;j--){
+        int n1=a.length,n2=b.length;
+        int[][] dp=new int[n1+1][n2+1];
+        for(int i=n1-1;i>=0;i--){
+            for(int j=n2-1;j>=0;j--){
                 if(a[i]==b[j])
                     dp[i][j]=1+dp[i+1][j+1];
                 else
